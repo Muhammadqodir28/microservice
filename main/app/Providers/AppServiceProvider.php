@@ -8,7 +8,7 @@ use App\Jobs\ProductUpdated;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 
-class fAppServiceProvider extends ServiceProvider
+class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.

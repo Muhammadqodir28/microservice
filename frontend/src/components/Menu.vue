@@ -1,23 +1,28 @@
 <template>
-  <aside class="admin-sidebar" aria-label="Разделы панели">
-    <p class="sidebar-label">Рабочее пространство</p>
+  <aside class="admin-sidebar" :aria-label="t('workspace')">
+    <p class="sidebar-label">{{ t('workspace') }}</p>
     <RouterLink class="sidebar-link" to="/admin/products">
       <span class="sidebar-icon" aria-hidden="true">▦</span>
-      Товары
+      {{ t('products') }}
+    </RouterLink>
+    <RouterLink class="sidebar-link" to="/chat">
+      <span class="sidebar-icon" aria-hidden="true">◌</span>
+      {{ t('chat') }}
     </RouterLink>
     <RouterLink class="sidebar-link" to="/admin/products/create">
       <span class="sidebar-icon" aria-hidden="true">＋</span>
-      Добавить товар
+      {{ t('addProduct') }}
     </RouterLink>
     <div class="sidebar-divider"></div>
     <RouterLink class="sidebar-link" to="/">
       <span class="sidebar-icon" aria-hidden="true">↗</span>
-      Открыть витрину
+      {{ t('storefront') }}
     </RouterLink>
   </aside>
 </template>
 
 <script setup lang="ts">
+import { t } from '@/i18n'
 import { RouterLink } from 'vue-router'
 </script>
 

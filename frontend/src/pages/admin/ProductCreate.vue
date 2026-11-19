@@ -2,29 +2,30 @@
   <section>
     <header class="page-heading">
       <div>
-        <p class="eyebrow">Каталог</p>
-        <h1>Новый товар</h1>
-        <p>Заполните информацию, которая появится в витрине.</p>
+        <p class="eyebrow">{{ t('catalog') }}</p>
+        <h1>{{ t('newProduct') }}</h1>
+        <p>{{ t('newProductIntro') }}</p>
       </div>
-      <RouterLink to="/admin/products" class="button button-secondary">← К списку</RouterLink>
+      <RouterLink to="/admin/products" class="button button-secondary">{{ t('backToList') }}</RouterLink>
     </header>
 
     <form class="admin-form-card" @submit.prevent="submit">
       <div class="field">
-        <label for="title">Название товара</label>
-        <input id="title" v-model.trim="title" name="title" placeholder="Например, керамическая ваза" required />
+        <label for="title">{{ t('productTitle') }}</label>
+        <input id="title" v-model.trim="title" name="title" :placeholder="t('exampleProduct')" required />
       </div>
       <div class="field">
-        <label for="image">Ссылка на изображение</label>
+        <label for="image">{{ t('imageUrl') }}</label>
         <input id="image" v-model.trim="image" name="image" type="url" placeholder="https://example.com/image.jpg" required />
       </div>
-      <button class="button" type="submit" :disabled="saving">{{ saving ? 'Сохраняем…' : 'Сохранить товар' }}</button>
+      <button class="button" type="submit" :disabled="saving">{{ saving ? t('saving') : t('saveProduct') }}</button>
       <p v-if="error" class="form-error" role="alert">{{ error }}</p>
     </form>
   </section>
 </template>
 
 <script setup lang="ts">
+import { t } from '@/i18n'
 import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 
@@ -43,10 +44,10 @@ async function submit() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title: title.value, image: image.value }),
     })
-    if (!response.ok) throw new Error('Не удалось сохранить товар. Проверьте данные и подключение к серверу.')
+    if (!response.ok) throw new Error(t('saveProductError'))
     await router.push('/admin/products')
   } catch (cause: unknown) {
-    error.value = cause instanceof Error ? cause.message : 'Не удалось сохранить товар.'
+    error.value = cause instanceof Error ? cause.message : t('saveProductError')
   } finally {
     saving.value = false
   }

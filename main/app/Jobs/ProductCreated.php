@@ -21,12 +21,12 @@ class ProductCreated implements ShouldQueue
      */
     public function handle(): void
     {
-        Product::create([
-            'id' => $this->data['id'],
-            'title' => $this->data['title'],
-            'image' => $this->data['image'],
-            'created_at' => $this->data['created_at'],
-            'updated_at' => $this->data['updated_at'],
-        ]);
+        Product::updateOrCreate(
+            ['id' => $this->data['id']],
+            [
+                'title' => $this->data['title'],
+                'image' => $this->data['image'],
+            ]
+        );
     }
 }

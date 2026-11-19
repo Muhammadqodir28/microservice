@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\ProductCreated;
-use App\Jobs\ProductDeleted;
+use App\Events\ProductChanged;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Throwable;
 
 class ProductController extends Controller
 {
@@ -23,26 +23,38 @@ class ProductController extends Controller
     {
         $product = Product::create($request->only('title', 'image'));
 
-        ProductCreated::dispatch($product->toArray());
+        $this->broadcastChange('created', $product->toArray());
 
         return response()->json($product, 201);
     }
 
     public function update($id, Request $request)
     {
-        $product = Product::find($id);
+        $product = Product::findOrFail($id);
 
         $product->update($request->only('title', 'image'));
+
+        $this->broadcastChange('updated', $product->fresh()->toArray());
 
         return response()->json($product, 201);
     }
 
     public function destroy($id)
     {
-        Product::destroy($id);
+        $product = Product::findOrFail($id);
+        $product->delete();
 
-        ProductDeleted::dispatch($id);
+        $this->broadcastChange('deleted', ['id' => (int) $id]);
 
         return response()->json(null, 204);
+    }
+
+    private function broadcastChange(string $type, array $product): void
+    {
+        try {
+            event(new ProductChanged($type, $product));
+        } catch (Throwable $exception) {
+            report($exception);
+        }
     }
 }

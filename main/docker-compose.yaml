@@ -20,11 +20,45 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: guest
       RABBITMQ_PASSWORD: guest
+      BROADCAST_CONNECTION: reverb
+      REVERB_APP_ID: ${REVERB_APP_ID:-microstore}
+      REVERB_APP_KEY: ${REVERB_APP_KEY:-microstore-local-key}
+      REVERB_APP_SECRET: ${REVERB_APP_SECRET:-microstore-local-secret}
+      REVERB_HOST: reverb
+      REVERB_PORT: 8080
+      REVERB_SCHEME: http
     volumes:
       - .:/app
     command: >
       sh -c "php artisan migrate --force &&
              php artisan serve --host=0.0.0.0 --port=8000"
+    networks:
+      - shared_net
+
+  queue:
+    image: main-main
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      main_db:
+        condition: service_healthy
+    environment:
+      APP_KEY: base64:dvVeVdG+F9W/0YDYkzkNmz/KI1Qc4TeOPUvKOXQmLeA=
+      DB_HOST: main_db
+      DB_PORT: 3306
+      DB_DATABASE: main
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      QUEUE_CONNECTION: rabbitmq
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+    volumes:
+      - .:/app
+    command: php artisan queue:work rabbitmq --queue=default --sleep=1 --tries=3 --timeout=90
+    restart: unless-stopped
     networks:
       - shared_net
 

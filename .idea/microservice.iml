@@ -259,6 +259,19 @@
       <excludeFolder url="file://$MODULE_DIR$/main/vendor/psr/http-server-handler" />
       <excludeFolder url="file://$MODULE_DIR$/main/vendor/psr/http-server-middleware" />
       <excludeFolder url="file://$MODULE_DIR$/main/vendor/symfony/psr-http-message-bridge" />
+      <excludeFolder url="file://$MODULE_DIR$/admin/vendor/clue/redis-protocol" />
+      <excludeFolder url="file://$MODULE_DIR$/admin/vendor/clue/redis-react" />
+      <excludeFolder url="file://$MODULE_DIR$/admin/vendor/evenement/evenement" />
+      <excludeFolder url="file://$MODULE_DIR$/admin/vendor/laravel/reverb" />
+      <excludeFolder url="file://$MODULE_DIR$/admin/vendor/pusher/pusher-php-server" />
+      <excludeFolder url="file://$MODULE_DIR$/admin/vendor/ratchet/rfc6455" />
+      <excludeFolder url="file://$MODULE_DIR$/admin/vendor/react/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/admin/vendor/react/dns" />
+      <excludeFolder url="file://$MODULE_DIR$/admin/vendor/react/event-loop" />
+      <excludeFolder url="file://$MODULE_DIR$/admin/vendor/react/promise" />
+      <excludeFolder url="file://$MODULE_DIR$/admin/vendor/react/promise-timer" />
+      <excludeFolder url="file://$MODULE_DIR$/admin/vendor/react/socket" />
+      <excludeFolder url="file://$MODULE_DIR$/admin/vendor/react/stream" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
