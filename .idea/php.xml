@@ -268,6 +268,19 @@
       <path value="$PROJECT_DIR$/admin/vendor/league/event" />
       <path value="$PROJECT_DIR$/admin/vendor/psr/http-server-middleware" />
       <path value="$PROJECT_DIR$/admin/vendor/psr/http-server-handler" />
+      <path value="$PROJECT_DIR$/admin/vendor/laravel/reverb" />
+      <path value="$PROJECT_DIR$/admin/vendor/react/cache" />
+      <path value="$PROJECT_DIR$/admin/vendor/react/stream" />
+      <path value="$PROJECT_DIR$/admin/vendor/pusher/pusher-php-server" />
+      <path value="$PROJECT_DIR$/admin/vendor/react/event-loop" />
+      <path value="$PROJECT_DIR$/admin/vendor/react/dns" />
+      <path value="$PROJECT_DIR$/admin/vendor/react/socket" />
+      <path value="$PROJECT_DIR$/admin/vendor/react/promise-timer" />
+      <path value="$PROJECT_DIR$/admin/vendor/react/promise" />
+      <path value="$PROJECT_DIR$/admin/vendor/ratchet/rfc6455" />
+      <path value="$PROJECT_DIR$/admin/vendor/evenement/evenement" />
+      <path value="$PROJECT_DIR$/admin/vendor/clue/redis-protocol" />
+      <path value="$PROJECT_DIR$/admin/vendor/clue/redis-react" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.3" />

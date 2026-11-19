@@ -2,31 +2,32 @@
   <section>
     <header class="page-heading">
       <div>
-        <p class="eyebrow">Каталог</p>
-        <h1>Изменить товар</h1>
-        <p>Обновите название или изображение товара.</p>
+        <p class="eyebrow">{{ t('catalog') }}</p>
+        <h1>{{ t('editProduct') }}</h1>
+        <p>{{ t('editProductIntro') }}</p>
       </div>
-      <RouterLink to="/admin/products" class="button button-secondary">← К списку</RouterLink>
+      <RouterLink to="/admin/products" class="button button-secondary">{{ t('backToList') }}</RouterLink>
     </header>
 
-    <div v-if="loading" class="status-state">Загружаем товар…</div>
+    <div v-if="loading" class="status-state">{{ t('loadingProduct') }}</div>
     <div v-else-if="error && !title" class="status-state is-error">{{ error }}</div>
     <form v-else class="admin-form-card" @submit.prevent="submit">
       <div class="field">
-        <label for="title">Название товара</label>
+        <label for="title">{{ t('productTitle') }}</label>
         <input id="title" v-model.trim="title" name="title" required />
       </div>
       <div class="field">
-        <label for="image">Ссылка на изображение</label>
+        <label for="image">{{ t('imageUrl') }}</label>
         <input id="image" v-model.trim="image" name="image" type="url" required />
       </div>
-      <button class="button" type="submit" :disabled="saving">{{ saving ? 'Сохраняем…' : 'Сохранить изменения' }}</button>
+      <button class="button" type="submit" :disabled="saving">{{ saving ? t('saving') : t('saveChanges') }}</button>
       <p v-if="error" class="form-error" role="alert">{{ error }}</p>
     </form>
   </section>
 </template>
 
 <script setup lang="ts">
+import { t } from '@/i18n'
 import { onMounted, ref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 
@@ -41,12 +42,12 @@ const router = useRouter()
 onMounted(async () => {
   try {
     const response = await fetch(`http://localhost:8004/api/products/${route.params.id}`)
-    if (!response.ok) throw new Error('Не удалось загрузить товар.')
+    if (!response.ok) throw new Error(t('loadProductError'))
     const product = await response.json()
     title.value = product.title
     image.value = product.image
   } catch (cause: unknown) {
-    error.value = cause instanceof Error ? cause.message : 'Не удалось загрузить товар.'
+    error.value = cause instanceof Error ? cause.message : t('loadProductError')
   } finally {
     loading.value = false
   }
@@ -61,10 +62,10 @@ async function submit() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title: title.value, image: image.value }),
     })
-    if (!response.ok) throw new Error('Не удалось сохранить изменения.')
+    if (!response.ok) throw new Error(t('saveChangesError'))
     await router.push('/admin/products')
   } catch (cause: unknown) {
-    error.value = cause instanceof Error ? cause.message : 'Не удалось сохранить изменения.'
+    error.value = cause instanceof Error ? cause.message : t('saveChangesError')
   } finally {
     saving.value = false
   }

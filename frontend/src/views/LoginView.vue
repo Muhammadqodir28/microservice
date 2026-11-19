@@ -1,30 +1,37 @@
 <template>
   <main class="auth-page">
     <section class="auth-card" aria-labelledby="login-title">
-      <div class="brand-mark" aria-hidden="true">M</div>
-      <p class="eyebrow">С возвращением</p>
-      <h1 id="login-title">Войти в аккаунт</h1>
-      <p class="auth-intro">Войдите, чтобы управлять товарами и настройками.</p>
+      <div class="auth-topline">
+        <div class="brand-mark" aria-hidden="true">M</div>
+        <LanguageSwitcher />
+        <ThemeToggle />
+      </div>
+      <p class="eyebrow">{{ t('welcomeBack') }}</p>
+      <h1 id="login-title">{{ t('loginTitle') }}</h1>
+      <p class="auth-intro">{{ t('loginIntro') }}</p>
 
       <form class="auth-form" @submit.prevent="handleLogin">
-        <label for="email">Электронная почта</label>
-        <input id="email" v-model.trim="form.email" type="email" autocomplete="email" placeholder="name@example.com" required />
+        <label for="email">{{ t('email') }}</label>
+        <input id="email" v-model.trim="form.email" type="email" autocomplete="email" :placeholder="t('email')" required />
 
-        <label for="password">Пароль</label>
-        <input id="password" v-model="form.password" type="password" autocomplete="current-password" placeholder="Ваш пароль" required />
+        <label for="password">{{ t('password') }}</label>
+        <input id="password" v-model="form.password" type="password" autocomplete="current-password" :placeholder="t('yourPassword')" required />
 
         <p v-if="errorMessage" class="auth-message" role="alert">{{ errorMessage }}</p>
-        <button type="submit" :disabled="loading">{{ loading ? 'Входим…' : 'Войти' }}</button>
+        <button type="submit" :disabled="loading">{{ loading ? t('signingIn') : t('login') }}</button>
       </form>
 
-      <p class="auth-prompt">Нет аккаунта? <RouterLink to="/register">Создать аккаунт</RouterLink></p>
+      <p class="auth-prompt">{{ t('noAccount') }} <RouterLink to="/register">{{ t('register') }}</RouterLink></p>
     </section>
   </main>
 </template>
 
 <script setup lang="ts">
+import { t } from '@/i18n'
 import { reactive, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
+import ThemeToggle from '@/components/ThemeToggle.vue'
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 import { useAuthStore } from '@/stores/auth.ts'
 
 const authStore = useAuthStore()
@@ -46,7 +53,7 @@ async function handleLogin() {
   } catch (error: unknown) {
     if (typeof error === 'string') errorMessage.value = error
     else if (error && typeof error === 'object' && 'message' in error) errorMessage.value = String(error.message)
-    else errorMessage.value = 'Не удалось войти. Проверьте данные и попробуйте снова.'
+    else errorMessage.value = t('loginError')
   } finally {
     loading.value = false
   }

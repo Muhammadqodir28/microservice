@@ -8,6 +8,8 @@ import ProductCreate from '@/pages/admin/ProductCreate.vue';
 import ProductEdit from '@/pages/admin/ProductEdit.vue';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
+import ProfileView from '@/views/ProfileView.vue';
+import ChatView from '@/views/ChatView.vue';
 import { useAuthStore } from '@/stores/auth.ts'
 
 const router = createRouter({
@@ -37,6 +39,18 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: RegisterView,
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: ProfileView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/chat',
+      name: 'chat',
+      component: ChatView,
+      meta: { requiresAuth: true },
     },
   ],
 })

@@ -24,7 +24,7 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        $token = $user->createToken('Personal Access Token')->accessToken;
+        $token = $user->createToken($this->sessionName($request))->accessToken;
 
         return response()->json([
             'message' => 'User successfully registered',
@@ -48,7 +48,7 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
-        $token = $user->createToken('Personal Access Token')->accessToken;
+        $token = $user->createToken($this->sessionName($request))->accessToken;
 
         return response()->json([
             'message' => 'Login successful',
@@ -64,5 +64,29 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Successfully logged out'
         ], 200);
+    }
+
+    private function sessionName(Request $request): string
+    {
+        $agent = $request->userAgent() ?? '';
+
+        $browser = match (true) {
+            str_contains($agent, 'Edg/') => 'Microsoft Edge',
+            str_contains($agent, 'Firefox/') => 'Firefox',
+            str_contains($agent, 'Chrome/') && ! str_contains($agent, 'Edg/') => 'Chrome',
+            str_contains($agent, 'Safari/') && ! str_contains($agent, 'Chrome/') => 'Safari',
+            default => 'Браузер',
+        };
+
+        $platform = match (true) {
+            str_contains($agent, 'iPhone'), str_contains($agent, 'iPad') => 'iOS',
+            str_contains($agent, 'Android') => 'Android',
+            str_contains($agent, 'Macintosh'), str_contains($agent, 'Mac OS') => 'macOS',
+            str_contains($agent, 'Windows') => 'Windows',
+            str_contains($agent, 'Linux') => 'Linux',
+            default => 'устройство',
+        };
+
+        return "Microstore — {$browser} · {$platform}";
     }
 }

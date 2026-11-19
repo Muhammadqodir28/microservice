@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\Jobs\ProductLiked;
 use App\Models\Product;
 use App\Models\ProductUser;
-use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 class ProductController extends Controller
 {
@@ -16,42 +15,27 @@ class ProductController extends Controller
         return Product::all();
     }
 
-    /**
-     * @throws ConnectionException
-     */
-    public function like($id, Request $request)
+    public function like(int $id, Request $request)
     {
-        $response = Http::get('http://admin:8000/api/user');
-
-        $user = $response->json();
+        $user = $request->user();
 
         try {
-            $product = ProductUser::query()
-                ->where('user_id', $user['id'])
-                ->where('product_id', $id)
-                ->first();
-
-            if (! $product) {
-                $productUser = ProductUser::create([
-                    'user_id' => $user['id'],
-                    'product_id' => $id
-                ]);
-
-                ProductLiked::dispatch($productUser->toArray());
-
-                return response([
-                    'message' => 'success'
-                ]);
+            $productUser = ProductUser::create([
+                'user_id' => $user->id,
+                'product_id' => $id,
+            ]);
+        } catch (QueryException $exception) {
+            if ($exception->getCode() !== '23000') {
+                throw $exception;
             }
 
             return response([
-                'message' => 'already liked'
-            ], 400);
-        } catch (\Exception $exception) {
-            return response([
-                'text' => 'You already liked this product!',
-                'error' => $exception->getMessage()
-            ], 400);
+                'message' => 'already liked',
+            ], 409);
         }
+
+        ProductLiked::dispatch($productUser->toArray())->onQueue('product-likes');
+
+        return response()->json(['message' => 'success'], 202);
     }
 }

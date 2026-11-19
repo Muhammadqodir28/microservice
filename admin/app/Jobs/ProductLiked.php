@@ -2,9 +2,11 @@
 
 namespace App\Jobs;
 
+use App\Events\ProductChanged;
 use App\Models\Product;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Throwable;
 
 class ProductLiked implements ShouldQueue
 {
@@ -23,7 +25,15 @@ class ProductLiked implements ShouldQueue
     {
         $product = Product::find($this->data['product_id']);
 
-        $product->likes++;
-        $product->save();
+        if (! $product) {
+            return;
+        }
+
+        $product->increment('likes');
+        try {
+            event(new ProductChanged('liked', $product->fresh()->toArray()));
+        } catch (Throwable $exception) {
+            report($exception);
+        }
     }
 }
